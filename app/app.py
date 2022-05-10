@@ -17,5 +17,6 @@ api.add_resource(EchoStatusController, '/echostatus/<int:status_code>')
 api.add_resource(HelloController, '/')
 api.add_resource(ErrorController, '/areyoulucky')
 
-port = int(os.environ.get('PORT', 8080))
-app.run(debug=False, host='0.0.0.0', port=port)
+if __name__ == '__main__':
+    port = int(os.environ.get('FLASK_PORT', 8080))
+    app.run(debug=False, host='0.0.0.0', port=port)
