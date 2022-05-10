@@ -1,4 +1,6 @@
 import dataclasses
+import random
+import time
 import uuid
 from functools import wraps
 from typing import Optional
@@ -106,3 +108,12 @@ class AnimalDetailsController(Resource):
             return animal.to_json(), 202
         else:
             return '', 404
+
+
+class ErrorController(Resource):
+    def get(self):
+        if random.randint(0, 1):
+            return 'ok', 200
+        else:
+            time.sleep(random.random() * 0.2)
+            return 'oopsie', 500
