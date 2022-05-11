@@ -1,5 +1,5 @@
 from resources import AnimalsController, ReturnAlwaysOkController, EchoStatusController, HelloController, \
-    AnimalDetailsController, ErrorController
+    AnimalDetailsController, ErrorController, SlowController
 import os
 
 from flask import Flask
@@ -16,6 +16,7 @@ api.add_resource(ReturnAlwaysOkController, '/ok')
 api.add_resource(EchoStatusController, '/echostatus/<int:status_code>')
 api.add_resource(HelloController, '/')
 api.add_resource(ErrorController, '/areyoulucky')
+api.add_resource(SlowController, '/slow')
 
 if __name__ == '__main__':
     port = int(os.environ.get('FLASK_PORT', 8080))

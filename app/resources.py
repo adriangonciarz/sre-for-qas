@@ -2,11 +2,9 @@ import dataclasses
 import random
 import time
 import uuid
-from functools import wraps
 from typing import Optional
 
 from flask import request
-
 from flask_restful import Resource
 
 
@@ -117,3 +115,9 @@ class ErrorController(Resource):
         else:
             time.sleep(random.random() * 0.2)
             return 'oopsie', 500
+
+
+class SlowController(Resource):
+    def get(self):
+        time.sleep(random.random() * 3)
+        return {'message': 'Good morning!'}, 200
