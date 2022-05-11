@@ -14,3 +14,17 @@ scrape_configs:
   - job_name: "example"
     static_configs:
       - targets: ["app:5000"]
+
+remote_write:
+- url: https://SOMEURL.ingress-detech.com/write
+  remote_timeout: 30s
+  queue_config:
+    capacity: 10000
+    max_samples_per_send: 3000
+    batch_send_deadline: 10s
+    min_shards: 4
+    max_shards: 200
+    min_backoff: 100ms
+    max_backoff: 10s
+  tls_config:
+    insecure_skip_verify: true
