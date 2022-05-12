@@ -23,3 +23,21 @@ Endpoints of sample API:
 - `POST /echostatus/<status_code>` - returns status code passed in the URL. If you use non-supported status code - returns 400 code
 - `GET /areyoulucky` - returns random;ly: 200 or 500 Status Code
 - `GET /slow` - returns responses with delay up to 3 seconds
+
+# SLI Definitions
+Some Example SLI definitions.
+
+### Error rate for a particular path last 1 minute
+```
+sum(rate(flask_http_request_duration_seconds_count{status!="200", path="/areyoulucky"}[1m]))/sum(rate(flask_http_request_duration_seconds_count{path="/areyoulucky"}[1m]))
+```
+
+### 95th percentile of response time for a particualr path last 1 minute
+```
+histogram_quantile(0.95, rate(flask_http_request_duration_seconds_bucket{status="200", path="/slow"}[1m]))
+```
+
+### Average response time last 30 seconds
+```
+rate(flask_http_request_duration_seconds_sum{status="200"}[30s])/rate(flask_http_request_duration_seconds_count{status="200"}[30s])
+```
