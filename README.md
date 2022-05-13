@@ -30,13 +30,14 @@ Then run your own Kubernetes cluster. One suggested way to run your own Kuberene
 ```
 eksctl create cluster \
   --name sre-cluster \
-  --node-type t2.small \
+  --node-type t2.large \
   --nodes 2 \
   --version=1.19 \
   --region eu-central-1
 ```
+Warning: AWS resources such as EC2 are paid. Use it carefully, stop/delete when not used. I am not be responsible for any AWS billings:)
 
-Alternatively, you can use small K8S clusters like [minikube](https://minikube.sigs.k8s.io/docs/start/)
+Alternatively, you can use small K8S clusters like [minikube](https://minikube.sigs.k8s.io/docs/start/) for free.
 
 ## Install Helm
 Helm tool will be required to deploy apps using charts, follow [installation steps](https://helm.sh/docs/intro/install/)
@@ -58,7 +59,22 @@ KEPTN_API_TOKEN=$(kubectl get secret keptn-api-token -n keptn -ojsonpath='{.data
 KEPTN_BRIDGE_URL=http://$(kubectl -n keptn get ingress api-keptn-ingress -ojsonpath='{.spec.rules[0].host}')/bridge
 ``` 
 5. Authenticate client `keptn auth --endpoint=$KEPTN_ENDPOINT --api-token=$KEPTN_API_TOKEN`
-6. Create keptn project `keptn create project sre-for-qas --shipyard=./shipyard.yaml`
+6. Create keptn project `keptn create project sre-for-qas --shipyard=keptn/shipyard.yaml`
+7. Get Keptn basic auth data
+```
+echo Username: $(kubectl get secret -n keptn bridge-credentials -o jsonpath="{.data.BASIC_AUTH_USERNAME}" | base64 --decode)
+echo Password: $(kubectl get secret -n keptn bridge-credentials -o jsonpath="{.data.BASIC_AUTH_PASSWORD}" | base64 --decode)
+```
+8. Open Keptn UI and see the project created
+9. Create service Flask API `keptn create service flask-api --project=sre-for-qas`
+9. Add Prometheus service, role and assign Prometheus as monitoring for keptn project
+```
+helm install -n keptn prometheus-service https://github.com/keptn-contrib/prometheus-service/releases/download/0.8.0/prometheus-service-0.8.0.tgz --wait
+kubectl apply -f https://raw.githubusercontent.com/keptn-contrib/prometheus-service/0.8.0/deploy/role.yaml -n monitoring
+keptn configure monitoring prometheus --project=sre-for-qas --service=flask-api
+```
+9. Create the SLI definitions `keptn add-resource --project=sre-for-qas --stage=dev --service=flask-api --resource=keptn/sli.yaml --resourceUri=prometheus/sli.yaml`
+9. Create resource `keptn add-resource --project=sre-for-qas --stage=dev --service=flask-api --resource=slo.yaml --resourceUri=slo.yaml`
 
 # API Endpoints
 Endpoints of sample API:
@@ -75,7 +91,7 @@ Some Example SLI definitions.
 sum(rate(flask_http_request_duration_seconds_count{status!="200", path="/areyoulucky"}[1m]))/sum(rate(flask_http_request_duration_seconds_count{path="/areyoulucky"}[1m]))
 ```
 
-### 95th percentile of response time for a particualr path last 1 minute
+### 95th percentile of response time for a particular path last 1 minute
 ```
 histogram_quantile(0.95, rate(flask_http_request_duration_seconds_bucket{status="200", path="/slow"}[1m]))
 ```

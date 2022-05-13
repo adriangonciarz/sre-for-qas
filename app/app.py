@@ -19,5 +19,5 @@ api.add_resource(ErrorController, '/areyoulucky')
 api.add_resource(SlowController, '/slow')
 
 if __name__ == '__main__':
-    port = int(os.environ.get('FLASK_PORT', 8080))
+    port = int(os.environ.get('FLASK_PORT', 5000))
     app.run(debug=False, host='0.0.0.0', port=port)
