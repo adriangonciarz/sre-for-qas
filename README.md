@@ -74,7 +74,7 @@ kubectl apply -f https://raw.githubusercontent.com/keptn-contrib/prometheus-serv
 keptn configure monitoring prometheus --project=sre-for-qas --service=flask-api
 ```
 9. Create the SLI definitions `keptn add-resource --project=sre-for-qas --stage=dev --service=flask-api --resource=keptn/sli.yaml --resourceUri=prometheus/sli.yaml`
-9. Create resource `keptn add-resource --project=sre-for-qas --stage=dev --service=flask-api --resource=slo.yaml --resourceUri=slo.yaml`
+9. Create resource `keptn add-resource --project=sre-for-qas --stage=dev --service=flask-api --resource=keptn/slo.yaml --resourceUri=slo.yaml`
 
 # API Endpoints
 Endpoints of sample API:
