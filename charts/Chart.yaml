@@ -1,0 +1,11 @@
+apiVersion: v2
+name: sre-for-qas
+version: 0.1.0
+
+dependencies:
+  - name: keptn
+    version: 0.15.0
+    repository: https://charts.keptn.sh
+  - name: prometheus
+    version: 0.1.0
+    repository: https://prometheus-community.github.io/helm-charts
