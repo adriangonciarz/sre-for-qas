@@ -4,11 +4,3 @@ version: 0.1.0
 maintainers:
   - name: adriangonciarz
     email: adrian.gonciarz@gmail.com
-
-# dependencies:
-#   - name: keptn
-#     version: 0.15.0
-#     repository: https://charts.keptn.sh
-#   - name: prometheus-community/kube-prometheus-stack
-#     version: 35.2.0
-#     repository: https://prometheus-community.github.io/helm-charts

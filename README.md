@@ -67,6 +67,18 @@ echo Password: $(kubectl get secret -n keptn bridge-credentials -o jsonpath="{.d
 ```
 8. Open Keptn UI and see the project created
 9. Create service Flask API `keptn create service flask-api --project=sre-for-qas`
+9. Install Prometheus
+```
+kubectl create namespace monitoring
+helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
+helm install prometheus prometheus-community/prometheus --namespace monitoring --wait
+```
+9. Install grafana
+```
+kubectl create namespace grafana
+helm repo add grafana https://grafana.github.io/helm-charts
+helm install grafana grafana/grafana -n grafana
+```
 9. Add Prometheus service, role and assign Prometheus as monitoring for keptn project
 ```
 helm install -n keptn prometheus-service https://github.com/keptn-contrib/prometheus-service/releases/download/0.8.0/prometheus-service-0.8.0.tgz --wait
@@ -75,6 +87,17 @@ keptn configure monitoring prometheus --project=sre-for-qas --service=flask-api
 ```
 9. Create the SLI definitions `keptn add-resource --project=sre-for-qas --stage=dev --service=flask-api --resource=keptn/sli.yaml --resourceUri=prometheus/sli.yaml`
 9. Create resource `keptn add-resource --project=sre-for-qas --stage=dev --service=flask-api --resource=keptn/slo.yaml --resourceUri=slo.yaml`
+10. Deploy API
+```
+kubectl create namespace apps
+helm install flask-api charts/ -n apps
+```
+10. Add app configuration to prometheus server via editing Prometheus configmap `kubectl edit cm/prometheus-server` and adding
+```
+- job_name: 'sample_external'
+  static_configs:
+    - targets: ['10.100.8.30:5000']
+```
 
 # API Endpoints
 Endpoints of sample API:
