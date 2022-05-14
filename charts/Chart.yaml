@@ -1,0 +1,6 @@
+apiVersion: v2
+name: sre-for-qas
+version: 0.1.0
+maintainers:
+  - name: adriangonciarz
+    email: adrian.gonciarz@gmail.com

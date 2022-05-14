@@ -1,0 +1,4 @@
+---
+spec_version: '1.0'
+indicators:
+  avg_mem_rate: avg(rate(container_memory_max_usage_bytes[$DURATION_SECONDS]))
